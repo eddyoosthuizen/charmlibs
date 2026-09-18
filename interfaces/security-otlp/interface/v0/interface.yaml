@@ -1,0 +1,23 @@
+name: security-otlp
+version: 0
+status: draft
+lib: charmlibs.interfaces.security_otlp
+summary: Send a tagged, logs-only subset of a charm's telemetry directly to a security log collector.
+description: |
+  The `security-otlp` interface lets a workload charm send security-relevant logs straight to a
+  purpose-built collector over OTLP, bypassing its general COS/`otlp` observability pipeline for
+  this one class of data. It is modeled on the `otlp` interface's Provider/Requirer split, but is
+  logs-only, requires TLS from the first release, and is designed for cross-model, cross-controller,
+  and cross-cloud relations.
+
+providers:
+  - name: log-aggregator-k8s-operator
+    url: https://github.com/canonical/log-aggregator-k8s-operator
+
+requirers:
+  - name: hydra-operator
+    url: https://github.com/canonical/hydra-operator
+  - name: kratos-operator
+    url: https://github.com/canonical/kratos-operator
+
+maintainer: secops
