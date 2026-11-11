@@ -1,15 +1,10 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
-"""This file defines the schemas for the provider and requirer sides.
-
-It exposes two interfaces.schema_base.DataBagSchema subclasses called:
-- ProviderSchema
-- RequirerSchema
+"""This file defines the schemas for the provider and requirer sides of this relation interface.
 
 Examples:
-    ProviderSchema:
-        unit: <empty>
-        app: {
+    ProviderAppData:
+        {
             "endpoints": [
                 {
                     "protocol": "http",
@@ -18,12 +13,10 @@ Examples:
             ]
         }
 
-    RequirerSchema:
-        unit: <empty>
-        app: <empty>
+The requirer never writes to its databags: this interface carries no rules, so there is
+nothing for the requirer to publish.
 """
 
-from interface_tester.schema_base import DataBagSchema
 from pydantic import BaseModel, Field
 
 
@@ -36,23 +29,14 @@ class SecurityOtlpEndpointSchema(BaseModel):
     )
 
 
-class SecurityOtlpProvider(BaseModel):
-    """SecurityOtlpProvider model."""
+class ProviderAppData(BaseModel):
+    """Application databag model for the provider side of this interface."""
 
     endpoints: list[SecurityOtlpEndpointSchema] = Field(
         description='List of security-otlp endpoints exposed by the provider.'
     )
 
 
-class ProviderSchema(DataBagSchema):
-    """Provider schema for security-otlp."""
-
-    app: SecurityOtlpProvider
-
-
-class RequirerSchema(DataBagSchema):
-    """Requirer schema for security-otlp.
-
-    The requirer never writes to its own app databag -- this interface carries no rules, so
-    there is nothing for the requirer to publish.
-    """
+ProviderUnitData = None
+RequirerAppData = None
+RequirerUnitData = None

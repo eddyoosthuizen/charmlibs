@@ -2,7 +2,7 @@
 
 Lets a workload charm send security-relevant logs directly to a purpose-built collector
 (`log-aggregator-k8s`) over OTLP, bypassing the charm's general `otlp`/COS pipeline for this one
-class of data. See [the spec](../../../../../../spec-security-otlp.md) for full rationale.
+class of data.
 
 * `receive-security-otlp` (provider) -- declared by `log-aggregator-k8s`
 * `send-security-otlp` (requirer) -- declared by source workload charms (`hydra`, `kratos`)
