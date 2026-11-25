@@ -1,7 +1,7 @@
 # Copyright 2026 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Feature: security-otlp endpoint handling."""
+"""Feature: security_otlp endpoint handling."""
 
 import json
 from collections.abc import Sequence
@@ -210,6 +210,40 @@ def test_endpoints_skips_relation_with_invalid_databag(
         endpoints[7].model_dump()
         == SecurityOtlpEndpoint(protocol='http', endpoint='https://a.example:4318').model_dump()
     )
+
+
+def test_endpoints_ignores_endpoints_without_tls(
+    security_otlp_requirer_ctx: testing.Context[ops.CharmBase],
+):
+    # GIVEN one relation that publishes only a plaintext endpoint
+    plaintext_relation = Relation(
+        SEND,
+        id=5,
+        remote_app_data={
+            'endpoints': json.dumps([{'protocol': 'http', 'endpoint': 'http://a.example:4319'}])
+        },
+    )
+    # AND one relation that publishes a plaintext and a TLS endpoint
+    mixed_relation = Relation(
+        SEND,
+        id=7,
+        remote_app_data={
+            'endpoints': json.dumps([
+                {'protocol': 'http', 'endpoint': 'http://b.example:4319'},
+                {'protocol': 'http', 'endpoint': 'https://b.example:4319'},
+            ])
+        },
+    )
+    state = State(relations=[plaintext_relation, mixed_relation])
+
+    ctx = security_otlp_requirer_ctx
+    with ctx(ctx.on.update_status(), state=state) as mgr:
+        # WHEN the requirer resolves endpoints
+        endpoints = SecurityOtlpRequirer(mgr.charm, protocols=['http']).endpoints
+
+    # THEN no plaintext endpoint is used
+    assert 5 not in endpoints
+    assert endpoints[7].endpoint == 'https://b.example:4319'
 
 
 def test_endpoints_end_to_end(security_otlp_requirer_ctx: testing.Context[ops.CharmBase]):

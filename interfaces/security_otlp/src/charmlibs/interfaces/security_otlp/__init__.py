@@ -12,19 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""security-otlp Provider and Requirer Library.
+"""security_otlp Provider and Requirer Library.
 
-security-otlp lets a workload charm send a security-relevant, logs-only subset of its
-telemetry directly to a purpose-built collector, bypassing its general `otlp`/COS pipeline for
-this one class of data.
+security_otlp lets a workload charm send a security-relevant, logs-only subset of its
+telemetry to a collector, separately from its general logging and `otlp` integrations.
 
 Getting Started
 ================
 
-Provider Side (log-aggregator-k8s: offering a security-otlp endpoint)
+Provider Side (log-aggregator-k8s: offering a security_otlp endpoint)
 -----------------------------------------------------------------------
 
-To provide a security-otlp endpoint, use the ``SecurityOtlpProvider`` class. Add and publish
+To provide a security_otlp endpoint, use the ``SecurityOtlpProvider`` class. Add and publish
 endpoints with ``add_endpoint`` and ``publish()``::
 
     from charmlibs.interfaces.security_otlp import SecurityOtlpProvider
@@ -37,16 +36,18 @@ endpoints with ``add_endpoint`` and ``publish()``::
         def _publish_endpoint(self, event):
             SecurityOtlpProvider(self).add_endpoint(
                 protocol="http",
-                endpoint="https://log-aggregator.secops.example:4318",
+                endpoint="https://collector.example:4319",
             ).publish()
 
 Every endpoint published on this interface must use ``https://`` -- ``add_endpoint`` raises
 ``ValueError`` immediately if it doesn't, rather than silently accepting a plaintext endpoint.
+The requirer enforces the same rule on what it reads, so a provider that publishes a plaintext
+endpoint anyway is ignored rather than sent to.
 
-Requirer Side (hydra, kratos: consuming a security-otlp endpoint)
+Requirer Side (hydra, kratos: consuming a security_otlp endpoint)
 ---------------------------------------------------------------------
 
-To consume a security-otlp endpoint, use the ``SecurityOtlpRequirer`` class::
+To consume a security_otlp endpoint, use the ``SecurityOtlpRequirer`` class::
 
     from charmlibs.interfaces.security_otlp import SecurityOtlpRequirer
 
@@ -70,7 +71,7 @@ The provider publishes a list of endpoints under the ``endpoints`` key::
     "endpoints": [
         {
             "protocol": "http",
-            "endpoint": "https://log-aggregator.secops.example:4318"
+            "endpoint": "https://collector.example:4319"
         }
     ]
 

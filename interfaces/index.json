@@ -783,6 +783,18 @@
     "status": "draft"
   },
   {
+    "name": "security_otlp",
+    "version": "0",
+    "lib": "charmlibs.interfaces.security_otlp",
+    "lib_url": "",
+    "lib_docs_url": "https://canonical.com/juju/docs/charmlibs/reference/charmlibs/interfaces/security_otlp",
+    "docs_url": "https://canonical.com/juju/docs/charmlibs/reference/interfaces/security_otlp/",
+    "summary": "Send a charm's security-relevant logs to a collector over OTLP with TLS.",
+    "description": "The `security_otlp` interface lets a workload charm send security-relevant logs to a collector\nover OTLP, separately from its general logging and `otlp` integrations. It is modeled on the\n`otlp` interface's Provider/Requirer split, but is logs-only, requires TLS from the first release,\nand is designed for cross-model, cross-controller, and cross-cloud relations.",
+    "tags": [],
+    "status": "draft"
+  },
+  {
     "name": "smtp",
     "version": "0",
     "lib": "charms.smtp_integrator.smtp",

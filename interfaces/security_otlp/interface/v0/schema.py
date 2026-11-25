@@ -8,7 +8,7 @@ Examples:
             "endpoints": [
                 {
                     "protocol": "http",
-                    "endpoint": "https://log-aggregator.secops.example:4318"
+                    "endpoint": "https://collector.example:4319"
                 }
             ]
         }
@@ -21,11 +21,11 @@ from pydantic import BaseModel, Field
 
 
 class SecurityOtlpEndpointSchema(BaseModel):
-    """A single security-otlp endpoint, as published by the provider."""
+    """A single security_otlp endpoint, as published by the provider."""
 
     protocol: str = Field(description="Transport protocol used to send logs to this endpoint.")
     endpoint: str = Field(
-        description="HTTPS URL of the endpoint (e.g. 'https://log-aggregator.secops.example:4318')."
+        description="HTTPS URL of the endpoint (e.g. 'https://collector.example:4319')."
     )
 
 
@@ -33,7 +33,7 @@ class ProviderAppData(BaseModel):
     """Application databag model for the provider side of this interface."""
 
     endpoints: list[SecurityOtlpEndpointSchema] = Field(
-        description='List of security-otlp endpoints exposed by the provider.'
+        description='List of security_otlp endpoints exposed by the provider.'
     )
 
 

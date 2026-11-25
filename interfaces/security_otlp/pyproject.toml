@@ -20,23 +20,23 @@ dependencies = [
 ]
 
 [dependency-groups]
-lint = [  # installed for `just lint security-otlp` (unit, functional, and integration are also installed)
+lint = [  # installed for `just lint security_otlp` (unit, functional, and integration are also installed)
 ]
-unit = [  # installed for `just unit security-otlp`
+unit = [  # installed for `just unit security_otlp`
     "ops[testing]",
     "pytest",
 ]
-functional = [  # installed for `just functional security-otlp`
+functional = [  # installed for `just functional security_otlp`
 ]
-integration = [  # installed for `just integration security-otlp`
+integration = [  # installed for `just integration security_otlp`
     "jubilant",
 ]
 
 [project.urls]
 "Documentation" = "https://canonical.com/juju/docs/charmlibs/reference/charmlibs/interfaces/security_otlp"
-"Repository" = "https://github.com/canonical/charmlibs/tree/main/interfaces/security-otlp"
+"Repository" = "https://github.com/canonical/charmlibs/tree/main/interfaces/security_otlp"
 "Issues" = "https://github.com/canonical/charmlibs/issues"
-"Changelog" = "https://github.com/canonical/charmlibs/blob/main/interfaces/security-otlp/CHANGELOG.md"
+"Changelog" = "https://github.com/canonical/charmlibs/blob/main/interfaces/security_otlp/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]

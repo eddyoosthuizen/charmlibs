@@ -267,6 +267,9 @@
 /interfaces/sdcore_management/interface/ @canonical/charmlibs-maintainers
 /interfaces/sdcore_management/ruff.toml @canonical/charmlibs-maintainers
 
+# /interfaces/security_otlp/
+/interfaces/security_otlp/ @canonical/secops
+
 # /interfaces/sloth/
 /interfaces/sloth/ @canonical/tracing-and-profiling
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Fixtures and test charms shared by the security-otlp unit tests."""
+"""Fixtures and test charms shared by the security_otlp unit tests."""
 
 import ops
 import pytest
@@ -30,7 +30,7 @@ PROVIDER_ENDPOINT_URL = 'https://collector.example:4318'
 
 
 class SecurityOtlpProviderCharm(CharmBase):
-    """A minimal charm that publishes one security-otlp endpoint on update-status."""
+    """A minimal charm that publishes one security_otlp endpoint on update-status."""
 
     def __init__(self, framework: ops.Framework):
         super().__init__(framework)

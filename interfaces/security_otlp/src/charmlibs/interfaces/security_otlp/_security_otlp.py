@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Internal implementation of the security-otlp Provider and Requirer library.
+"""Internal implementation of the security_otlp Provider and Requirer library.
 
 This document is the authoritative reference on the structure of relation data that is
-shared between charms that intend to provide or consume security-otlp endpoints.
+shared between charms that intend to provide or consume security_otlp endpoints.
 For user-facing documentation, see the package-level docstring in __init__.py.
 """
 
@@ -34,31 +34,31 @@ logger = logging.getLogger(__name__)
 
 
 class SecurityOtlpEndpoint(BaseModel):
-    """A pydantic model for a single security-otlp endpoint."""
+    """A pydantic model for a single security_otlp endpoint."""
 
     protocol: str = Field(description='Transport protocol used to send logs to this endpoint.')
     endpoint: str = Field(description="HTTPS URL of the endpoint (e.g. 'https://collector:4318').")
 
 
 class _SecurityOtlpEndpoint(SecurityOtlpEndpoint):
-    """A pydantic model for a single security-otlp endpoint."""
+    """A pydantic model for a single security_otlp endpoint."""
 
 
 class _SecurityOtlpProviderAppData(BaseModel):
-    """A pydantic model for the security-otlp provider's app databag."""
+    """A pydantic model for the security_otlp provider's app databag."""
 
     endpoints: list[_SecurityOtlpEndpoint] = Field(
-        description='List of security-otlp endpoints exposed by the provider.'
+        description='List of security_otlp endpoints exposed by the provider.'
     )
 
 
 class SecurityOtlpRequirer:
-    """A class for consuming security-otlp endpoints.
+    """A class for consuming security_otlp endpoints.
 
     Args:
         charm: The charm instance.
         relation_name: The name of the relation to use.
-        protocols: The protocols to filter for in the provider's security-otlp
+        protocols: The protocols to filter for in the provider's security_otlp
             endpoints.
     """
 
@@ -77,8 +77,17 @@ class SecurityOtlpRequirer:
     def _filter_endpoints(
         self, endpoints: list[_SecurityOtlpEndpoint]
     ) -> list[_SecurityOtlpEndpoint]:
-        """Filter out endpoints whose protocol isn't supported by this requirer."""
-        return [e for e in endpoints if e.protocol in self._protocols]
+        """Filter out endpoints without TLS, and endpoints whose protocol isn't supported."""
+        supported: list[_SecurityOtlpEndpoint] = []
+        for endpoint in endpoints:
+            # add_endpoint() rejects these on the provider side; a provider that publishes one
+            # anyway must not make this charm send logs in plaintext.
+            if not endpoint.endpoint.startswith('https://'):
+                logger.warning('ignoring a security_otlp endpoint without TLS: %s', endpoint.endpoint)
+                continue
+            if endpoint.protocol in self._protocols:
+                supported.append(endpoint)
+        return supported
 
     def _favor_modern_endpoints(
         self, endpoints: list[_SecurityOtlpEndpoint]
@@ -93,7 +102,7 @@ class SecurityOtlpRequirer:
 
     @property
     def endpoints(self) -> dict[int, SecurityOtlpEndpoint]:
-        """A mapping of relation ID to security-otlp endpoint.
+        """A mapping of relation ID to security_otlp endpoint.
 
         For each remote's list of endpoints, the requirer filters out endpoints with
         unsupported protocols. If multiple compatible endpoints remain, the requirer
@@ -109,7 +118,7 @@ class SecurityOtlpRequirer:
             try:
                 provider = relation.load(_SecurityOtlpProviderAppData, relation.app)
             except ValidationError as e:
-                logger.error('security-otlp databag failed validation: %s', e)
+                logger.error('security_otlp databag failed validation: %s', e)
                 continue
             if endpoints := self._filter_endpoints(provider.endpoints):
                 endpoint_map[relation.id] = self._favor_modern_endpoints(endpoints)
@@ -118,7 +127,7 @@ class SecurityOtlpRequirer:
 
 
 class SecurityOtlpProvider:
-    """A class for publishing security-otlp endpoints.
+    """A class for publishing security_otlp endpoints.
 
     Args:
         charm: The charm instance.
@@ -139,9 +148,9 @@ class SecurityOtlpProvider:
         protocol: Literal['http', 'grpc'],
         endpoint: str,
     ) -> 'SecurityOtlpProvider':
-        """Add a security-otlp endpoint to the list of endpoints to publish."""
+        """Add a security_otlp endpoint to the list of endpoints to publish."""
         if not endpoint.startswith('https://'):
-            raise ValueError(f'security-otlp endpoints must use TLS (https://), got: {endpoint!r}')
+            raise ValueError(f'security_otlp endpoints must use TLS (https://), got: {endpoint!r}')
         self._endpoints.append(_SecurityOtlpEndpoint(protocol=protocol, endpoint=endpoint))
         return self
 

@@ -1,11 +1,9 @@
 # charmlibs.interfaces.security_otlp
 
-The `security-otlp` library.
+The `security_otlp` library.
 
-Lets a workload charm send a security-relevant, logs-only subset of its telemetry directly to a
-purpose-built collector (e.g. `log-aggregator-k8s`), bypassing its general `otlp`/COS pipeline
-for this one class of data. See the [security-otlp spec](../../../spec-security-otlp.md) for full
-rationale.
+Lets a workload charm send a security-relevant, logs-only subset of its telemetry to a collector,
+such as `log-aggregator-k8s`, separately from its general logging and `otlp` integrations.
 
 ## Features
 
@@ -38,7 +36,7 @@ class MyCollector(CharmBase):
     def _publish_endpoint(self, event):
         SecurityOtlpProvider(self).add_endpoint(
             protocol="http",
-            endpoint="https://log-aggregator.secops.example:4318",
+            endpoint="https://collector.example:4319",
         ).publish()
 ```
 
