@@ -520,6 +520,18 @@
     "status": "draft"
   },
   {
+    "name": "log_filters",
+    "version": "0",
+    "lib": "charmlibs.interfaces.log_filters",
+    "lib_url": "",
+    "lib_docs_url": "https://canonical.com/juju/docs/charmlibs/reference/charmlibs/interfaces/log_filters",
+    "docs_url": "https://canonical.com/juju/docs/charmlibs/reference/interfaces/log_filters/",
+    "summary": "Publish the rules for filtering a charm's logs to the collector that applies them.",
+    "description": "The `log_filters` interface lets a charm own the rules for filtering its own logs, while the\ncollector it sends them to applies those rules before forwarding anything. It carries rules and\nthe charm's Juju topology only; the logs travel over any other relation, and the collector\nmatches rules to logs by topology.",
+    "tags": [],
+    "status": "draft"
+  },
+  {
     "name": "login_ui_endpoints",
     "version": "0",
     "lib": "charms.identity_platform_login_ui_operator.login_ui_endpoints",

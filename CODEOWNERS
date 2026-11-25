@@ -207,6 +207,9 @@
 /interfaces/litmus_auth/interface/ @canonical/tracing-and-profiling
 /interfaces/litmus_auth/ruff.toml @canonical/tracing-and-profiling
 
+# /interfaces/log_filters/
+/interfaces/log_filters/ @canonical/secops
+
 # /interfaces/login_ui_endpoints/
 /interfaces/login_ui_endpoints/interface/ @canonical/identity
 /interfaces/login_ui_endpoints/ruff.toml @canonical/identity
