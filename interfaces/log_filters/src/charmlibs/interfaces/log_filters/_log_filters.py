@@ -86,18 +86,17 @@ class Source:
 
 @dataclass(frozen=True)
 class SourceFilters:
-    """One accepted relation's rules.
-
-    Attributes:
-        relation_id: The relation the rules came from.
-        ottl_drop: OTTL log record conditions; a record matching any of them is dropped.
-        claim_checked: False when Juju could not report the remote model (before Juju 3.6.2),
-            so the claimed topology was taken as given.
-    """
+    """One accepted relation's rules."""
 
     relation_id: int
+    """The relation the rules came from."""
+
     ottl_drop: tuple[str, ...]
+    """OTTL log record conditions; a record matching any of them is dropped."""
+
     claim_checked: bool
+    """False when Juju could not report the remote model (before Juju 3.6.2), so the claimed
+    topology was taken as given."""
 
 
 class LogFiltersRequirer:
