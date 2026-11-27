@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Log filters Provider and Requirer library, and a Pebble log forwarder for ``otlp``.
+"""Log filters Provider and Requirer library.
 
 The ``log_filters`` interface lets a charm publish the rules for filtering its own logs, so that
 the collector it sends them to drops what the charm says is noise before anything is forwarded.
@@ -51,23 +51,6 @@ two relations stays with the older one. Topology identifies a source; it does no
 the sender of a log record. The provider must check the conditions with its collector before
 using them, for example with ``otelcol validate``.
 
-Forwarding Pebble logs over ``otlp``
--------------------------------------
-
-Workloads that write to stdout cannot send OTLP themselves. ``forward_logs_over_otlp`` reads an
-``otlp`` relation's endpoints, without publishing to it, and adds a Pebble ``opentelemetry`` log
-target for each, labelled with the unit's topology. It needs Pebble 1.24 or later (Juju 3.6.13
-or 4.0.1); on an older Pebble it returns why, and the charm can forward over its ``logging``
-relation instead::
-
-    from charmlibs.interfaces.log_filters import forward_logs_over_otlp
-
-    if reason := forward_logs_over_otlp(self, self.unit.get_container('workload')):
-        self.unit.status = ops.ActiveStatus(reason)
-
-``plan_contains_layer`` reports whether a layer would change the plan, so charms can skip an
-identical ``add_layer``: before Pebble 1.33 each one makes Pebble resend forwarded log buffers.
-
 Relation Data Format
 ====================
 
@@ -88,11 +71,6 @@ The requirer's app databag::
 language; a provider ignores languages it does not support. The provider writes nothing.
 """
 
-from ._forwarding import (
-    DEFAULT_OTLP_RELATION_NAME,
-    forward_logs_over_otlp,
-    plan_contains_layer,
-)
 from ._log_filters import (
     MAX_CONDITION_LENGTH,
     MAX_CONDITIONS,
@@ -104,13 +82,10 @@ from ._log_filters import (
 from ._version import __version__ as __version__
 
 __all__ = [
-    'DEFAULT_OTLP_RELATION_NAME',
     'MAX_CONDITIONS',
     'MAX_CONDITION_LENGTH',
     'LogFiltersProvider',
     'LogFiltersRequirer',
     'Source',
     'SourceFilters',
-    'forward_logs_over_otlp',
-    'plan_contains_layer',
 ]

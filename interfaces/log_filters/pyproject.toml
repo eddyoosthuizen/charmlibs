@@ -18,7 +18,6 @@ dependencies = [
     # "ops",
     "pydantic~=2.0",
     "cosl>=1.6.1",
-    "charmlibs-interfaces-otlp>=0.5,<1",
 ]
 
 [dependency-groups]
